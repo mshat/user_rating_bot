@@ -1,1 +1,4 @@
 /venv/
+/telegram_ui/.env
+/telegram_ui/client/client.env
+
