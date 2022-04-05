@@ -82,29 +82,23 @@ class UserQuestionsListView(APIView):
         """
         Возвращает список ответов пользователя
         """
-        if 'tg-user-id' not in request.headers:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': "Header 'tg-user-id' not found"})
+        if 'user-id' not in request.headers:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': "Header 'user-id' not found"})
 
-        tg_user_id = request.headers['tg-user-id']
-        questions = UserQuestion.objects.select_related('my_user_id').filter(my_user_id__tg_user_id=tg_user_id)
+        user_id = request.headers['user-id']
+        questions = UserQuestion.objects.filter(user_id=user_id)
         serializer = UserQuestionSerializer(questions, many=True)
 
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def post(self, request):
-        if 'tg_user_id' not in request.data:
-            error_data = {'message': f'Invalid data!', 'validate errors': {"tg_user_id": ["This field is required."]}}
-            return Response(status=status.HTTP_400_BAD_REQUEST, data=error_data)
-
-        user = get_object_or_404(MyUser.objects.all(), tg_user_id=request.data["tg_user_id"])
-        data = {key: val for key, val in request.data.items() if key != 'tg_user_id'}
-        data.update({'my_user_id': user.id})
-
-        serializer = UserQuestionSerializer(data=data)
+        serializer = UserQuestionSerializer(data={key: val for key, val in request.data.items()})
         if not serializer.is_valid():
             error_data = {'message': f'Invalid data!', 'validate errors': serializer.errors}
             return Response(status=status.HTTP_400_BAD_REQUEST, data=error_data)
-        new_question = UserQuestion(my_user_id=user, question=serializer.data["question"])
+
+        user = get_object_or_404(MyUser.objects.all(), id=serializer.data["user_id"])
+        new_question = UserQuestion(user_id=user, question=serializer.data["question"])
         if "likes_num" in serializer.data:
             new_question.likes_num = serializer.data["likes_num"]
         if "dislikes_num" in serializer.data:
@@ -145,35 +139,30 @@ class UserAnswersListView(APIView):
         """
         Возвращает список вопросов пользователя
         """
-        if 'tg-user-id' not in request.headers:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': "Header 'tg-user-id' not found"})
+        if 'user-id' not in request.headers:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': "Header 'user-id' not found"})
 
-        tg_user_id = request.headers['tg-user-id']
-        questions = UserAnswer.objects.select_related('my_user_id').filter(my_user_id__tg_user_id=tg_user_id)
+        user_id = request.headers['user-id']
+        questions = UserAnswer.objects.filter(user_id=user_id)
         serializer = UserAnswerSerializer(questions, many=True)
 
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def post(self, request):
-        if 'tg_user_id' not in request.data:
-            error_data = {'message': f'Invalid data!', 'validate errors': {"tg_user_id": ["This field is required."]}}
-            return Response(status=status.HTTP_400_BAD_REQUEST, data=error_data)
-
-        user = get_object_or_404(MyUser.objects.all(), tg_user_id=request.data["tg_user_id"])
-        data = {key: val for key, val in request.data.items() if key != 'tg_user_id'}
-        data.update({'my_user_id': user.id})
-
-        serializer = UserAnswerSerializer(data=data)
+        serializer = UserAnswerSerializer(data={key: val for key, val in request.data.items()})
         if not serializer.is_valid():
             error_data = {'message': f'Invalid data!', 'validate errors': serializer.errors}
             return Response(status=status.HTTP_400_BAD_REQUEST, data=error_data)
-        new_question = UserAnswer(my_user_id=user, answer=serializer.data["answer"])
-        if "likes_num" in serializer.data:
-            new_question.likes_num = serializer.data["likes_num"]
-        if "dislikes_num" in serializer.data:
-            new_question.dislikes_num = serializer.data["dislikes_num"]
-        if "best_answer" in serializer.data:
-            new_question.has_an_answer = serializer.data["best_answer"]
 
-        new_question.save()
-        return Response(status=status.HTTP_200_OK, data={'id': new_question.id})
+        user = get_object_or_404(MyUser.objects.all(), id=serializer.data["user_id"])
+        new_answer = UserAnswer(user_id=user, answer=serializer.data["answer"])
+        if "likes_num" in serializer.data:
+            new_answer.likes_num = serializer.data["likes_num"]
+        if "dislikes_num" in serializer.data:
+            new_answer.dislikes_num = serializer.data["dislikes_num"]
+        if "best_answer" in serializer.data:
+            new_answer.has_an_answer = serializer.data["best_answer"]
+
+        new_answer.save()
+        return Response(status=status.HTTP_200_OK, data={'id': new_answer.id})
+
