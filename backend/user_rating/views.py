@@ -19,12 +19,15 @@ class UserView(APIView):
         """
         Обновляет пользователя с указанным tg_user_id или возвращает 404
         """
+        pass
 
     def delete(self, request, tg_user_id: int):
         """
         Удаляет пользователя с указанным tg_user_id или возвращает 404
         """
-        pass
+        user = get_object_or_404(MyUser.objects.all(), tg_user_id=tg_user_id)
+        user.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class UsersListView(APIView):
@@ -69,7 +72,9 @@ class UserQuestionView(APIView):
         """
         Удаляет вопрос с указанным id или возвращает 404
         """
-        pass
+        question = get_object_or_404(UserQuestion.objects.all(), id=question_id)
+        question.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class UserQuestionsListView(APIView):
@@ -116,8 +121,8 @@ class UserAnswerView(APIView):
         """
         Возвращает ответ c указанным id или возвращает 404
         """
-        question = get_object_or_404(UserAnswer.objects.all(), id=answer_id)
-        serializer = UserAnswerSerializer(question)
+        answer = get_object_or_404(UserAnswer.objects.all(), id=answer_id)
+        serializer = UserAnswerSerializer(answer)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def put(self, request, answer_id: int):
@@ -130,7 +135,9 @@ class UserAnswerView(APIView):
         """
         Удаляет ответ с указанным id или возвращает 404
         """
-        pass
+        answer = get_object_or_404(UserAnswer.objects.all(), id=answer_id)
+        answer.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class UserAnswersListView(APIView):
