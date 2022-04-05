@@ -15,6 +15,12 @@ class UserView(APIView):
         serializer = UserSerializer(user)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
+    def put(self, request):
+        pass
+
+    def delete(self, request):
+        pass
+
 
 class UsersListView(APIView):
     def get(self, request):
@@ -38,7 +44,20 @@ class UsersListView(APIView):
         new_user.save()
         return Response(status=status.HTTP_200_OK, data={'id': new_user.id})
 
+
+class UserQuestionView(APIView):
+    def get(self, request, question_id: int):
+        """
+        Возвращает вопрос c указанным id или 404
+        """
+        question = get_object_or_404(UserQuestion.objects.all(), id=question_id)
+        serializer = UserQuestionSerializer(question)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
+
     def put(self, request):
+        pass
+
+    def delete(self, request):
         pass
 
 
@@ -55,9 +74,6 @@ class UserQuestionsListView(APIView):
         serializer = UserQuestionSerializer(questions, many=True)
 
         return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-    def delete(self, request):
-        pass
 
     def post(self, request):
         if 'tg_user_id' not in request.data:
@@ -83,7 +99,20 @@ class UserQuestionsListView(APIView):
         new_question.save()
         return Response(status=status.HTTP_200_OK, data={'id': new_question.id})
 
+
+class UserAnswerView(APIView):
+    def get(self, request, answer_id: int):
+        """
+        Возвращает ответ c указанным id или 404
+        """
+        question = get_object_or_404(UserAnswer.objects.all(), id=answer_id)
+        serializer = UserAnswerSerializer(question)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
+
     def put(self, request):
+        pass
+
+    def delete(self, request):
         pass
 
 
@@ -100,9 +129,6 @@ class UserAnswersListView(APIView):
         serializer = UserAnswerSerializer(questions, many=True)
 
         return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-    def delete(self, request):
-        pass
 
     def post(self, request):
         if 'tg_user_id' not in request.data:
@@ -127,6 +153,3 @@ class UserAnswersListView(APIView):
 
         new_question.save()
         return Response(status=status.HTTP_200_OK, data={'id': new_question.id})
-
-    def put(self, request):
-        pass
