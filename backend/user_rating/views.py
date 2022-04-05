@@ -9,16 +9,22 @@ from .serializers import UserSerializer, UserQuestionSerializer, UserAnswerSeria
 class UserView(APIView):
     def get(self, request, tg_user_id: int):
         """
-        Возвращает пользователя с указанным tg_user_id или 404
+        Возвращает пользователя с указанным tg_user_id или возвращает 404
         """
         user = get_object_or_404(MyUser.objects.all(), tg_user_id=tg_user_id)
         serializer = UserSerializer(user)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def put(self, request):
+        """
+        Обновляет пользователя с указанным tg_user_id или возвращает 404
+        """
         pass
 
     def delete(self, request):
+        """
+        Удаляет пользователя с указанным tg_user_id или возвращает 404
+        """
         pass
 
 
@@ -48,16 +54,22 @@ class UsersListView(APIView):
 class UserQuestionView(APIView):
     def get(self, request, question_id: int):
         """
-        Возвращает вопрос c указанным id или 404
+        Возвращает вопрос c указанным id или возвращает 404
         """
         question = get_object_or_404(UserQuestion.objects.all(), id=question_id)
         serializer = UserQuestionSerializer(question)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def put(self, request):
+        """
+        Обновляет вопрос с указанным id или возвращает 404
+        """
         pass
 
     def delete(self, request):
+        """
+        Удаляет вопрос с указанным id или возвращает 404
+        """
         pass
 
 
@@ -103,16 +115,22 @@ class UserQuestionsListView(APIView):
 class UserAnswerView(APIView):
     def get(self, request, answer_id: int):
         """
-        Возвращает ответ c указанным id или 404
+        Возвращает ответ c указанным id или возвращает 404
         """
         question = get_object_or_404(UserAnswer.objects.all(), id=answer_id)
         serializer = UserAnswerSerializer(question)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def put(self, request):
+        """
+        Обновляет вответ с указанным id или возвращает 404
+        """
         pass
 
     def delete(self, request):
+        """
+        Удаляет ответ с указанным id или возвращает 404
+        """
         pass
 
 
