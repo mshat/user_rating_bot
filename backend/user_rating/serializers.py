@@ -11,10 +11,10 @@ class UserSerializer(serializers.ModelSerializer):
 class UserQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserQuestion
-        exclude = ('id', )
+        fields = '__all__'
 
 
 class UserAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAnswer
-        exclude = ('id', )
+        fields = '__all__'
