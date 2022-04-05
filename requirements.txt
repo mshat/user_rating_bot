@@ -15,3 +15,4 @@ sqlparse==0.4.2
 TgCrypto==1.2.3
 tzdata==2022.1
 urllib3==1.26.9
+djangorestframework~=3.13.1
