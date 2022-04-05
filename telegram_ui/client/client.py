@@ -62,4 +62,3 @@ class MyClient(metaclass=Singleton):
                     message_obj = Message(message.message_id, message.text, reactions)
                     messages.append(message_obj)
         return messages
-
