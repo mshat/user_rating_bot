@@ -2,3 +2,5 @@
 /telegram_ui/.env
 /telegram_ui/client/client.env
 
+/backend/backend/.env
+/backend/db.sqlite3
