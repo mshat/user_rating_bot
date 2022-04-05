@@ -15,13 +15,12 @@ class UserView(APIView):
         serializer = UserSerializer(user)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
-    def put(self, request):
+    def put(self, request, tg_user_id: int):
         """
         Обновляет пользователя с указанным tg_user_id или возвращает 404
         """
-        pass
 
-    def delete(self, request):
+    def delete(self, request, tg_user_id: int):
         """
         Удаляет пользователя с указанным tg_user_id или возвращает 404
         """
@@ -60,13 +59,13 @@ class UserQuestionView(APIView):
         serializer = UserQuestionSerializer(question)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
-    def put(self, request):
+    def put(self, request, question_id: int):
         """
         Обновляет вопрос с указанным id или возвращает 404
         """
         pass
 
-    def delete(self, request):
+    def delete(self, request, question_id: int):
         """
         Удаляет вопрос с указанным id или возвращает 404
         """
@@ -121,13 +120,13 @@ class UserAnswerView(APIView):
         serializer = UserAnswerSerializer(question)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
-    def put(self, request):
+    def put(self, request, answer_id: int):
         """
         Обновляет вответ с указанным id или возвращает 404
         """
         pass
 
-    def delete(self, request):
+    def delete(self, request, answer_id: int):
         """
         Удаляет ответ с указанным id или возвращает 404
         """
