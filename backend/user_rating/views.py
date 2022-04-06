@@ -47,7 +47,7 @@ class UsersListView(APIView):
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def post(self, request):
-        serializer = UserSerializer(data={key: val for key, val in request.data.items()})
+        serializer = UserSerializer(data=request.data)
         if not serializer.is_valid():
             error_data = {'message': f'Invalid data!', 'validate errors': serializer.errors}
             return Response(status=status.HTTP_400_BAD_REQUEST, data=error_data)
@@ -99,7 +99,7 @@ class UserQuestionsListView(APIView):
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def post(self, request):
-        serializer = UserQuestionSerializer(data={key: val for key, val in request.data.items()})
+        serializer = UserQuestionSerializer(data=request.data)
         if not serializer.is_valid():
             error_data = {'message': f'Invalid data!', 'validate errors': serializer.errors}
             return Response(status=status.HTTP_400_BAD_REQUEST, data=error_data)
@@ -156,7 +156,7 @@ class UserAnswersListView(APIView):
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def post(self, request):
-        serializer = UserAnswerSerializer(data={key: val for key, val in request.data.items()})
+        serializer = UserAnswerSerializer(data=request.data)
         if not serializer.is_valid():
             error_data = {'message': f'Invalid data!', 'validate errors': serializer.errors}
             return Response(status=status.HTTP_400_BAD_REQUEST, data=error_data)
