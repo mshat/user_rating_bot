@@ -49,8 +49,7 @@ class UsersListView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if not serializer.is_valid():
-            error_data = {'message': f'Invalid data!', 'validate errors': serializer.errors}
-            return Response(status=status.HTTP_400_BAD_REQUEST, data=error_data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         new_user = MyUser(
             tg_user_id=serializer.data["tg_user_id"], first_name=serializer.data["first_name"],
@@ -108,8 +107,7 @@ class UserQuestionsListView(APIView):
     def post(self, request):
         serializer = UserQuestionSerializer(data=request.data)
         if not serializer.is_valid():
-            error_data = {'message': f'Invalid data!', 'validate errors': serializer.errors}
-            return Response(status=status.HTTP_400_BAD_REQUEST, data=error_data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         user = get_object_or_404(MyUser.objects.all(), id=serializer.data["user_id"])
         new_question = UserQuestion(user_id=user, question=serializer.data["question"])
@@ -172,8 +170,7 @@ class UserAnswersListView(APIView):
     def post(self, request):
         serializer = UserAnswerSerializer(data=request.data)
         if not serializer.is_valid():
-            error_data = {'message': f'Invalid data!', 'validate errors': serializer.errors}
-            return Response(status=status.HTTP_400_BAD_REQUEST, data=error_data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         user = get_object_or_404(MyUser.objects.all(), id=serializer.data["user_id"])
         new_answer = UserAnswer(user_id=user, answer=serializer.data["answer"])
