@@ -19,7 +19,14 @@ class UserView(APIView):
         """
         Обновляет пользователя с указанным tg_user_id или возвращает 404
         """
-        pass
+        user = get_object_or_404(MyUser.objects.all(), tg_user_id=tg_user_id)
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            serializer_dict = serializer.data
+            return Response(serializer_dict, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, tg_user_id: int):
         """
