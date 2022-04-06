@@ -73,7 +73,14 @@ class UserQuestionView(APIView):
         """
         Обновляет вопрос с указанным id или возвращает 404
         """
-        pass
+        question = get_object_or_404(UserQuestion.objects.all(), id=question_id)
+        serializer = UserQuestionSerializer(question, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            serializer_dict = serializer.data
+            return Response(serializer_dict, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, question_id: int):
         """
@@ -130,7 +137,14 @@ class UserAnswerView(APIView):
         """
         Обновляет вответ с указанным id или возвращает 404
         """
-        pass
+        answer = get_object_or_404(UserAnswer.objects.all(), id=answer_id)
+        serializer = UserAnswerSerializer(answer, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            serializer_dict = serializer.data
+            return Response(serializer_dict, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, answer_id: int):
         """
