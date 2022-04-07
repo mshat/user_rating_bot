@@ -7,19 +7,19 @@ from .serializers import UserSerializer, UserQuestionSerializer, UserAnswerSeria
 
 
 class UserView(APIView):
-    def get(self, request, tg_user_id: int):
+    def get(self, request, user_id: int):
         """
         Возвращает пользователя с указанным tg_user_id или возвращает 404
         """
-        user = get_object_or_404(MyUser.objects.all(), tg_user_id=tg_user_id)
+        user = get_object_or_404(MyUser.objects.all(), id=user_id)
         serializer = UserSerializer(user)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
-    def put(self, request, tg_user_id: int):
+    def put(self, request, user_id: int):
         """
         Обновляет пользователя с указанным tg_user_id или возвращает 404
         """
-        user = get_object_or_404(MyUser.objects.all(), tg_user_id=tg_user_id)
+        user = get_object_or_404(MyUser.objects.all(), id=user_id)
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -28,11 +28,11 @@ class UserView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, tg_user_id: int):
+    def delete(self, request, user_id: int):
         """
         Удаляет пользователя с указанным tg_user_id или возвращает 404
         """
-        user = get_object_or_404(MyUser.objects.all(), tg_user_id=tg_user_id)
+        user = get_object_or_404(MyUser.objects.all(), id=user_id)
         user.delete()
         return Response(status=status.HTTP_200_OK)
 
@@ -42,9 +42,15 @@ class UsersListView(APIView):
         """
         Возвращает список пользователей
         """
-        users = MyUser.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(status=status.HTTP_200_OK, data=serializer.data)
+        tg_user_id = request.GET.get('tg-user-id', None)
+        if tg_user_id:
+            user = get_object_or_404(MyUser.objects.all(), tg_user_id=tg_user_id)
+            serializer = UserSerializer(user)
+            return Response(status=status.HTTP_200_OK, data=serializer.data)
+        else:
+            users = MyUser.objects.all()
+            serializer = UserSerializer(users, many=True)
+            return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
