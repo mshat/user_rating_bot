@@ -4,3 +4,8 @@
 
 /backend/backend/.env
 /backend/db.sqlite3
+/tg_client/tg_client/.env
+/tg_client/client/services/client.env
+/backend/user_rating/services/tg_client/client.env
+/backend/user_rating/services/confirmation_code_bot/.env
+/backend/user_rating/services/tg_client/confirmation_code_bot/.env
