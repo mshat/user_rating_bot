@@ -1,0 +1,33 @@
+version: "3"
+services:
+  backend:
+    build: ./backend
+    command: /bin/sh -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend/:/usr/src/backend
+    ports:
+      - 8000:8000
+      - 5555:8080
+    environment:
+      - DEBUG=1
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
+
+
+  celery:
+      build: ./backend
+      command: celery -A backend worker -B --loglevel=info --logfile=logs/celery.log
+      volumes:
+        - ./backend/:/usr/src/backend
+      environment:
+        - DEBUG=1
+        - CELERY_BROKER=redis://redis:6379/0
+        - CELERY_BACKEND=redis://redis:6379/0
+      depends_on:
+        - backend
+        - redis
+
+  redis:
+      image: redis:6-alpine
